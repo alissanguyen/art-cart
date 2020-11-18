@@ -19,6 +19,10 @@ const minifyArtistRecords = (records) => {
 const ProductsTable = base(process.env.AIRTABLE_PRODUCTS_TABLE_NAME);
 
 const getMinifiedProduct = (record) => {
+  if (!record.fields.isFavorited) {
+    record.fields.isFavorited = false;
+  }
+
   return {
     id: record.id,
     fields: record.fields,

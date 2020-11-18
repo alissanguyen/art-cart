@@ -1,11 +1,11 @@
 import { Card, MediaCard, Stack, TextContainer } from "@shopify/polaris";
 import * as React from "react";
-import { EXAMPLE_ARTISTS, EXAMPLE_PRODUCT_LISTING } from "../utils/sampleData";
 import FavoriteIcon from "./Reusable/FavoriteIcon";
 import styles from "../styles/Catalogue.module.css";
 
 interface Props {
-  productId: string;
+  product: Product;
+  artists: Record<string, Artist>;
 }
 
 const currencyFormatter = (currency: number) => {
@@ -18,13 +18,11 @@ const currencyFormatter = (currency: number) => {
 };
 
 const CatalogueProductListing: React.FC<Props> = (props) => {
-  const product = EXAMPLE_PRODUCT_LISTING[props.productId];
-
-  const associatedArtist = EXAMPLE_ARTISTS[product.artistId];
+  const associatedArtist = props.artists[props.product.artistId];
 
   return (
     <MediaCard
-      title={product.displayName}
+      title={props.product.displayName}
       description={`Created by ${associatedArtist.displayName}`}
       primaryAction={{
         content: "Add to cart",
@@ -36,7 +34,7 @@ const CatalogueProductListing: React.FC<Props> = (props) => {
       <div
         className={styles.CatalogueProductListing__MainPreviewImageContainer}
         style={{
-          backgroundImage: `url(${product.previewImageSrc})`,
+          backgroundImage: `url(${props.product.previewImageSrc})`,
         }}
       ></div>
 
@@ -44,12 +42,12 @@ const CatalogueProductListing: React.FC<Props> = (props) => {
         <Stack vertical={false} distribution="fillEvenly">
           <Stack vertical={false} spacing="tight">
             <FavoriteIcon user={associatedArtist} />
-            <TextContainer>{product.numberOfFavorites}</TextContainer>
+            <TextContainer>{props.product.numberOfFavorites}</TextContainer>
           </Stack>
 
           <TextContainer>
             <p className={styles.CatalogueProductListing__PriceDisplay}>
-              {currencyFormatter(product.priceInUsd)}
+              {currencyFormatter(props.product.priceInUsd)}
             </p>
           </TextContainer>
         </Stack>

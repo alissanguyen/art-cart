@@ -2,13 +2,17 @@ import { Layout, Page } from "@shopify/polaris";
 import classnames from "classnames";
 import * as React from "react";
 import {
+  ArtistsTable,
+  getMinifiedArtist,
   getMinifiedProduct,
   ProductsTable,
 } from "../../backend-utils/Airtable";
 import CatalogueProductListing from "../../components/CatalogueProductListing";
+import { sanitizeArtist, sanitizeProduct } from "../../utils/sanitization";
 
 interface CatalogueInitialProps {
   initialProducts: Record<string, Product>;
+  initialArtists: Record<string, Artist>;
 }
 
 const Catalogue: React.FC<CatalogueInitialProps> = (props) => {
@@ -21,10 +25,10 @@ const Catalogue: React.FC<CatalogueInitialProps> = (props) => {
         <Layout.Section fullWidth>
           <div className={classnames("Catalogue__Container")}>
             {initialProductsArray.map((product) => (
-              <CatalogueProductListing productId={product.productId} />
-            ))}
-            {initialProductsArray.map((product) => (
-              <CatalogueProductListing productId={product.productId} />
+              <CatalogueProductListing
+                product={product}
+                artists={props.initialArtists}
+              />
             ))}
           </div>
         </Layout.Section>
@@ -37,17 +41,31 @@ export async function getServerSideProps(): Promise<{
   props: CatalogueInitialProps;
 }> {
   try {
-    const products = await ProductsTable.select().firstPage();
+    const [products, artists] = await Promise.all([
+      ProductsTable.select().firstPage(),
+      ArtistsTable.select().firstPage(),
+    ]);
 
     const initialProducts = products
       .map(getMinifiedProduct)
-      .reduce((acc, cur) => {
-        acc[cur.id] = cur;
+      .map(sanitizeProduct)
+      .reduce<Record<string, Product>>((acc, cur) => {
+        acc[cur.productId] = cur;
         return acc;
       }, {});
+
+    const initialArtists = artists
+      .map(getMinifiedArtist)
+      .map(sanitizeArtist)
+      .reduce<Record<string, Artist>>((acc, cur) => {
+        acc[cur.artistId] = cur;
+      return acc;
+    }, {});
+
     return {
       props: {
         initialProducts,
+        initialArtists,
       },
     };
   } catch (err) {
@@ -55,6 +73,7 @@ export async function getServerSideProps(): Promise<{
     return {
       props: {
         initialProducts: {},
+        initialArtists: {},
       },
     };
   }

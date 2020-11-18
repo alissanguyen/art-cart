@@ -7,7 +7,6 @@ interface Product {
   isFavorited: boolean;
   numberOfFavorites: number;
   previewImageSrc: string;
-  notableBadges: ProductNotableBadgeId[];
 }
 
 type ProductNotableBadgeId =
@@ -19,11 +18,7 @@ type ProductNotableBadgeId =
 interface Artist {
   displayName: string;
   artistId: string;
-  associatedArtworkIds: string[];
   bio: string;
-  reviews: string[];
-  overallRating: number;
-  favoriteArtworks: string[];
 }
 
 interface User {
@@ -34,4 +29,27 @@ interface User {
   reviews: string[];
   overallRating: number;
   favoriteArtworks: string[];
+}
+
+interface AirtableArtist {
+  id: string;
+  fields: {
+    displayName: string;
+    bio: string;
+    artistId: string;
+  };
+}
+
+interface AirtableProduct {
+  id: string;
+  fields: {
+    productId: string;
+    displayName: string;
+    priceInUsd: number;
+    artistId: string;
+    numberOfCopiesSold: number;
+    isFavorited: boolean;
+    numberOfFavorites: number;
+    previewImageSrc: string;
+  };
 }
