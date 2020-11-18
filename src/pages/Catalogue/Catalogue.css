@@ -3,7 +3,6 @@
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 25px;
   max-width: min-content;
-  margin: auto;
 }
 
 .Catalogue__Container > .Polaris-Card:first-child {
@@ -18,3 +17,11 @@
   background-size: cover;
 }
 
+#favorite-icon {
+  font-size: 30px;
+}
+
+.CatalogueProductListing__PriceDisplay {
+  font-weight: bold;
+  text-align: right;
+}

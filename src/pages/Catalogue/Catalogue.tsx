@@ -21,30 +21,7 @@ const Catalogue: React.FC = () => {
             {sampleProducts.map((productId) => (
               <CatalogueProductListing productId={productId} />
             ))}
-            {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
-            ))}
-            {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
-            ))}
-            {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
-            ))}
-            {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
-            ))}
-            {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
-            ))}
-            {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
-            ))}
-            {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
-            ))}
-            {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
-            ))}
+            
           </div>
         </Layout.Section>
       </Layout>
