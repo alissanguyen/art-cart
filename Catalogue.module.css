@@ -15,7 +15,11 @@
   background-position: center;
   /* Make the background image cover the area of the <div>, and clip the excess */
   background-size: cover;
-} 
+}
+
+#favorite-icon {
+  font-size: 30px;
+}
 
 .CatalogueProductListing__PriceDisplay {
   font-weight: bold;

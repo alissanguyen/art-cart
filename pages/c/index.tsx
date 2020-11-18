@@ -9,6 +9,7 @@ import {
 } from "../../backend-utils/Airtable";
 import CatalogueProductListing from "../../components/CatalogueProductListing";
 import { sanitizeArtist, sanitizeProduct } from "../../utils/sanitization";
+import styles from "../../styles/Catalogue.module.css";
 
 interface CatalogueInitialProps {
   initialProducts: Record<string, Product>;
@@ -23,7 +24,7 @@ const Catalogue: React.FC<CatalogueInitialProps> = (props) => {
       <Layout>
         <Layout.Section secondary></Layout.Section>
         <Layout.Section fullWidth>
-          <div className={classnames("Catalogue__Container")}>
+          <div className={classnames(styles.Catalogue__Container)}>
             {initialProductsArray.map((product) => (
               <CatalogueProductListing
                 product={product}
@@ -59,8 +60,8 @@ export async function getServerSideProps(): Promise<{
       .map(sanitizeArtist)
       .reduce<Record<string, Artist>>((acc, cur) => {
         acc[cur.artistId] = cur;
-      return acc;
-    }, {});
+        return acc;
+      }, {});
 
     return {
       props: {
