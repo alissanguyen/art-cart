@@ -1,0 +1,20 @@
+.Catalogue__Container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 25px;
+  max-width: min-content;
+  margin: auto;
+}
+
+.Catalogue__Container > .Polaris-Card:first-child {
+  margin-top: 2rem;
+}
+
+.CatalogueProductListing__MainPreviewImageContainer {
+  width: 280px;
+  height: 400px;
+  background-position: center;
+  /* Make the background image cover the area of the <div>, and clip the excess */
+  background-size: cover;
+}
+
