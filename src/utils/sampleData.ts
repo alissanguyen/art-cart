@@ -46,10 +46,18 @@ export const EXAMPLE_ARTISTS: Record<string, Artist> = {
     artistId: "abc123",
     associatedArtworkIds: ["laksjflkajs232323", "alksfjklasjfklajsklfajsf"],
     displayName: "Hayao Miyazaki",
+    bio: 'a very talented Japanese artist',
+    overallRating: 4.5,
+    reviews: ['great artworks', 'fast shipping', 'artwork carefully wrapped'],
+    favoriteArtworks: ["kahdkgfkgjkgekhui"]
   },
   abddw23: {
     artistId: "abddw23",
     associatedArtworkIds: ["kahdkgfkgjkgekhui"],
     displayName: "C J",
+    bio: 'a very talented American artist',
+    overallRating: 4,
+    reviews: ['amazing artworks', 'fast shipping', 'artwork carefully wrapped'],
+    favoriteArtworks: ["kahdkgfkgjkgekhui", "laksjflkajs232323"]
   },
 };
