@@ -1,9 +1,9 @@
-import * as React from "react";
-import "./Catalogue.css";
+import { Layout, Page } from "@shopify/polaris";
 import classnames from "classnames";
-import { Card, Layout, Page } from "@shopify/polaris";
+import * as React from "react";
+import CatalogueProductListing from "../../components/CatalogueProductListing";
 import { EXAMPLE_PRODUCT_LISTING } from "../../utils/sampleData";
-import CatalogueProductListing from "./CatalogueProductListing";
+import styles from "../../styles/Catalogue.module.css";
 
 const Catalogue: React.FC = () => {
   const sampleProducts = Object.keys(EXAMPLE_PRODUCT_LISTING);
@@ -11,17 +11,15 @@ const Catalogue: React.FC = () => {
   return (
     <Page title="ArtCart Catalogue">
       <Layout>
-        <Layout.Section secondary
-        ></Layout.Section>
+        <Layout.Section secondary></Layout.Section>
         <Layout.Section fullWidth>
-          <div className={classnames("Catalogue__Container")}>
+          <div className={classnames(styles.Catalogue__Container)}>
             {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
+              <CatalogueProductListing key={productId} productId={productId} />
             ))}
             {sampleProducts.map((productId) => (
-              <CatalogueProductListing productId={productId} />
+              <CatalogueProductListing key={productId} productId={productId} />
             ))}
-            
           </div>
         </Layout.Section>
       </Layout>

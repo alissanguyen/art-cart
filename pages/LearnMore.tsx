@@ -1,6 +1,6 @@
 import { Button, Card, TextContainer } from "@shopify/polaris";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import Link from "../components/Reusable/Link";
 
 interface Props {}
 

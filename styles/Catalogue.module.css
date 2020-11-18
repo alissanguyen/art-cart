@@ -5,7 +5,7 @@
   max-width: min-content;
 }
 
-.Catalogue__Container > .Polaris-Card:first-child {
+.Catalogue__Container > *:first-child {
   margin-top: 2rem;
 }
 
