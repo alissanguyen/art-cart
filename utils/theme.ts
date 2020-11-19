@@ -1,4 +1,5 @@
 import { ThemeConfig } from "@shopify/polaris/dist/types/latest/src/utilities/theme";
+import { APP_HOST_NAME } from "../lib/constants/constants";
 
 /**
  * TODO: customize our colors here to fit our brand.
@@ -6,14 +7,13 @@ import { ThemeConfig } from "@shopify/polaris/dist/types/latest/src/utilities/th
 export const APP_THEME: ThemeConfig = {
   colors: {
     topBar: {
-      background: "#6F2D75", //controls the general apppearnce of the top navbar
-      backgroundLighter: "#C7D4FB",
-      backgroundDarker: "#7C82E2",
-      border: "#C4CDD5",
-      color: "#212B36",
+      background: "#A971FF",
     },
-    /**
-     * TODO: add theme
-     */
+  },
+  logo: {
+    width: 180,
+    topBarSource: "https://i.imgur.com/p5Ksvx2.png",
+    url: APP_HOST_NAME,
+    accessibilityLabel: "ArtCart",
   },
 };

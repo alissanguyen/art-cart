@@ -1,3 +1,13 @@
+interface LoggedInUser {
+  username: string;
+  avatarUrl: string;
+  accessToken: string;
+  isNewUser: boolean;
+  firstName?: string;
+  lastName?: string;
+  loggedInUtcTimestamp: number;
+}
+
 interface Product {
   productId: string;
   displayName: string;

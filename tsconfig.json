@@ -15,6 +15,6 @@
     "noEmit": true,
     "jsx": "preserve"
   },
-  "include": ["pages", "components", "*.d.ts", "utils", "backend-utils"],
+  "include": ["pages", "components", "*.d.ts", "utils", "backend-utils", "lib"],
   "exclude": ["node_modules"]
 }
