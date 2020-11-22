@@ -69,6 +69,10 @@ const NavbarFrame: React.FC = (props) => {
               {
                 items: [
                   {
+                    content: "Post Artwork",
+                    url: "/post-new-artwork",
+                  },
+                  {
                     content: "Sign Out",
                     icon: ArrowLeftMinor,
                     onAction: authContext.logOut,

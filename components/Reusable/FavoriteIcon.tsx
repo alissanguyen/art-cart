@@ -2,11 +2,10 @@ import { Button } from "@shopify/polaris";
 import * as React from "react";
 
 interface Props {
-  user: Artist;
+  
 }
 
 const FavoriteIcon: React.FC<Props> = (props) => {
-  const user = props.user;
 
   const [isFavorited, setIsFavorited] = React.useState(false);
 

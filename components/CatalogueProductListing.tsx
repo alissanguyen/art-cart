@@ -4,8 +4,8 @@ import FavoriteIcon from "./Reusable/FavoriteIcon";
 import styles from "../styles/Catalogue.module.css";
 
 interface Props {
-  product: Product;
-  artists: Record<string, Artist>;
+  artwork: Artwork;
+  associatedArtist?: User;
 }
 
 const currencyFormatter = (currency: number) => {
@@ -18,12 +18,14 @@ const currencyFormatter = (currency: number) => {
 };
 
 const CatalogueProductListing: React.FC<Props> = (props) => {
-  const associatedArtist = props.artists[props.product.artistId];
-
   return (
     <MediaCard
-      title={props.product.displayName}
-      description={`Created by ${associatedArtist.displayName}`}
+      title={props.artwork.displayName}
+      description={`Created by ${
+        props.associatedArtist
+          ? props.associatedArtist.displayName
+          : "[Deleted User]"
+      }`}
       primaryAction={{
         content: "Add to cart",
         onAction: () => {},
@@ -34,20 +36,20 @@ const CatalogueProductListing: React.FC<Props> = (props) => {
       <div
         className={styles.CatalogueProductListing__MainPreviewImageContainer}
         style={{
-          backgroundImage: `url(${props.product.previewImageSrc})`,
+          backgroundImage: `url(${props.artwork.previewImageSrc})`,
         }}
       ></div>
 
       <Card.Section subdued>
         <Stack vertical={false} distribution="fillEvenly">
           <Stack vertical={false} spacing="tight">
-            <FavoriteIcon user={associatedArtist} />
-            <TextContainer>{props.product.numberOfFavorites}</TextContainer>
+            <FavoriteIcon />
+            <TextContainer>{props.artwork.numberOfFavorites}</TextContainer>
           </Stack>
 
           <TextContainer>
             <p className={styles.CatalogueProductListing__PriceDisplay}>
-              {currencyFormatter(props.product.priceInUsd)}
+              {currencyFormatter(props.artwork.priceInUsd)}
             </p>
           </TextContainer>
         </Stack>

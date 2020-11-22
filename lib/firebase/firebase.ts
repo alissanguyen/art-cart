@@ -1,14 +1,31 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
 
 export let FirebaseInstance: firebase.app.App | null = null;
 
-export const initializeFirebaseApp = () => {
-  if (!FirebaseInstance) {
-    FirebaseInstance = firebase.initializeApp(FIREBASE_CONFIG);
-  }
-};
+export let FirestoreInstance: firebase.firestore.Firestore;
 
+export const initializeFirebaseApp = () => {
+  if (!FirebaseInstance && !firebase.apps.length) {
+    FirebaseInstance = firebase.initializeApp(FIREBASE_CONFIG);
+    FirestoreInstance = FirebaseInstance.firestore();
+
+  }
+
+  if (!FirebaseInstance) {
+    FirebaseInstance = firebase.apps[0];
+  }
+
+  if (!FirebaseInstance) {
+    throw new Error("Failed to initialize Firebase instance.");
+  }
+
+  return {
+    FirebaseInstance,
+    FirestoreInstance,
+  };
+};
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAYRAbU_RGrjvENgJUJNMR1UFRuCnWF598",
