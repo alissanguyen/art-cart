@@ -14,7 +14,8 @@ export const sanitizeArtwork = (
     previewImageSrc: rawFirestoreArtwork.preview_image_src,
     displayName: rawFirestoreArtwork.display_name,
     id: rawFirestoreArtwork.id,
-    isFavorited: false, // Todo: reference the likes of the currently logged in user and see if the ID of this artwork exists in the set of liked artwork IDs in the user object.
+    isFavorited: false, 
+    // TODO: reference the likes of the currently logged in user and see if the ID of this artwork exists in the set of liked artwork IDs in the user object.
   };
 };
 

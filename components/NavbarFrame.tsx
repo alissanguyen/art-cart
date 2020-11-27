@@ -13,10 +13,12 @@ import {
   ArrowRightMinor,
 } from "@shopify/polaris-icons";
 import { signInWithGithub } from "../lib/firebase/authProviders";
-import { useAuthContext } from "./AuthProvider/AuthProvider";
+import { useAuthContext } from "./Providers/AuthProvider";
+import { useArtworkDataContext } from "./Providers/ArtworkDataProvider";
 
 const NavbarFrame: React.FC = (props) => {
   const authContext = useAuthContext();
+  const artworkDataContext = useArtworkDataContext();
 
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isSecondaryMenuOpen, setIsSecondaryMenuOpen] = React.useState(false);
@@ -95,10 +97,15 @@ const NavbarFrame: React.FC = (props) => {
   const searchResultsMarkup = (
     <Card>
       <ActionList
-        items={[
-          { content: "Shopify help center" },
-          { content: "Community forums" },
-        ]}
+        items={Object.values(artworkDataContext.artworks)
+          .filter((el) => {
+            const regex = new RegExp(searchValue, "i");
+            return regex.test(el.displayName);
+          })
+          .map((el) => ({
+            content: el.displayName,
+            id: el.id,
+          }))}
       />
     </Card>
   );
@@ -125,7 +132,7 @@ const NavbarFrame: React.FC = (props) => {
       onClose={toggleIsSecondaryMenuOpen}
       actions={[
         {
-          items: [{ content: "Community forums" }],
+          items: [{ content: "hello" }],
         },
       ]}
     />
