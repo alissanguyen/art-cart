@@ -5,7 +5,7 @@ interface Props {
   to: string;
 }
 
-const Link: React.FC<Props> = (props) => {
+const Anchor: React.FC<Props> = (props) => {
   const { to, children } = props;
   const router = useRouter();
   const style = {
@@ -25,4 +25,4 @@ const Link: React.FC<Props> = (props) => {
   );
 };
 
-export default Link;
+export default Anchor;

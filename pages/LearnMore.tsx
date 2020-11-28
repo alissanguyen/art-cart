@@ -1,6 +1,6 @@
 import { Button, Card, TextContainer } from "@shopify/polaris";
 import * as React from "react";
-import Link from "../components/Reusable/Link";
+import Anchor from "../components/Reusable/Anchor";
 
 interface Props {}
 
@@ -13,9 +13,9 @@ const LearnMore: React.FC<Props> = ({}) => {
         </TextContainer>
       </Card.Section>
       <Card.Section>
-        <Link to="/">
+        <Anchor to="/">
           <Button>Go back to Home Page</Button>
-        </Link>
+        </Anchor>
       </Card.Section>
     </Card>
   );

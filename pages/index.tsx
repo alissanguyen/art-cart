@@ -1,7 +1,7 @@
 import { Button, Card, Page } from "@shopify/polaris";
 import Head from "next/head";
 import * as React from "react";
-import Link from "../components/Reusable/Link";
+import Anchor from "../components/Reusable/Anchor";
 
 interface Props {}
 
@@ -18,9 +18,9 @@ const Home: React.FC<Props> = ({}) => {
             sectioned
           >
             <Card.Section>
-              <Link to="/c">
+              <Anchor to="/c">
                 <Button>Browse Catalogue</Button>
-              </Link>
+              </Anchor>
             </Card.Section>
           </Card>
         </Page>

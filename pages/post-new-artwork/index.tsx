@@ -33,7 +33,8 @@ const PostNewArtwork: React.FC<Props> = ({}) => {
     /**
      * TODO:
      * Validate everything before writing to firebase.
-     *
+     * Implement uploading image with shopify dropzone
+     * 
      * e.g.
      * - display name max length/no inappropriate words (HARD)/no weird symbols/no emojis in the name
      * - preview image is appropriate (HARD)
