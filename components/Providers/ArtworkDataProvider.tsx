@@ -1,10 +1,10 @@
 import * as React from "react";
 import { RawFirestoreArtwork } from "../../firestore-collections";
-import {
-  transformFirestoreData,
-} from "../../lib/firebase/dataTransforms";
+import { transformFirestoreData } from "../../lib/firebase/dataTransforms";
 import { FirestoreInstance } from "../../lib/firebase/firebase";
+import { Artwork } from "../../types";
 import { sanitizeArtwork } from "../../utils/sanitization";
+import { useAuthContext } from "./AuthProvider";
 
 interface ArtworkDataContextValue {
   artworks: Record<string, Artwork>;
@@ -18,6 +18,8 @@ const ArtworkDataProvider: React.FC = (props) => {
   const [artworkData, setArtworkData] = React.useState<Record<string, Artwork>>(
     {}
   );
+
+  const { userAuthentication } = useAuthContext();
 
   React.useEffect(() => {
     const fetchArtworkData = async () => {
@@ -37,7 +39,7 @@ const ArtworkDataProvider: React.FC = (props) => {
     };
 
     fetchArtworkData();
-  }, []);
+  }, [userAuthentication]);
 
   return (
     <ArtworkDataContext.Provider value={{ artworks: artworkData }}>

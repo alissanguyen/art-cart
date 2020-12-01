@@ -22,7 +22,6 @@ function urlGenerate(string: string) {
   const splittedString = string.toLowerCase().split(" ");
   const reducer = (acc: string, cur: string) => acc + "-" + cur;
   const url = splittedString.reduce(reducer);
-  console.log(url);
   return url;
 }
 

@@ -9,16 +9,20 @@ import {
 import * as React from "react";
 import {
   ArrowLeftMinor,
-  QuestionMarkMajor,
+  CartMajor,
   ArrowRightMinor,
 } from "@shopify/polaris-icons";
 import { signInWithGithub } from "../lib/firebase/authProviders";
 import { useAuthContext } from "./Providers/AuthProvider";
 import { useArtworkDataContext } from "./Providers/ArtworkDataProvider";
+import { useCartDataContext } from "./Providers/CartDataProvider";
+import { useRouter } from "next/router";
 
 const NavbarFrame: React.FC = (props) => {
   const authContext = useAuthContext();
   const artworkDataContext = useArtworkDataContext();
+  const cartDataContext = useCartDataContext();
+  const router = useRouter();
 
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
   const [isSecondaryMenuOpen, setIsSecondaryMenuOpen] = React.useState(false);
@@ -52,7 +56,7 @@ const NavbarFrame: React.FC = (props) => {
   const userMenuMarkup = (
     <TopBar.UserMenu
       actions={
-        !authContext.user
+        !authContext.userAuthentication
           ? [
               {
                 items: [
@@ -72,7 +76,9 @@ const NavbarFrame: React.FC = (props) => {
                 items: [
                   {
                     content: "Post Artwork",
-                    url: "/post-new-artwork",
+                    onAction: () => {
+                      router.push("/post-new-artwork");
+                    },
                   },
                   {
                     content: "Sign Out",
@@ -83,10 +89,15 @@ const NavbarFrame: React.FC = (props) => {
               },
             ]
       }
-      name={authContext.user ? authContext.user.username : "Anonymous"}
+      name={
+        authContext.userAuthentication
+          ? authContext.userAuthentication.username
+          : "Anonymous"
+      }
       initials={
-        authContext.user && authContext.user.firstName
-          ? authContext.user.firstName.charAt(0)
+        authContext.userAuthentication &&
+        authContext.userAuthentication.firstName
+          ? authContext.userAuthentication.firstName.charAt(0)
           : "?"
       }
       open={isUserMenuOpen}
@@ -123,7 +134,7 @@ const NavbarFrame: React.FC = (props) => {
     <TopBar.Menu
       activatorContent={
         <span>
-          <Icon source={QuestionMarkMajor} />
+          <Icon source={CartMajor} />
           <VisuallyHidden>Secondary menu</VisuallyHidden>
         </span>
       }
@@ -132,7 +143,14 @@ const NavbarFrame: React.FC = (props) => {
       onClose={toggleIsSecondaryMenuOpen}
       actions={[
         {
-          items: [{ content: "hello" }],
+          items: [
+            {
+              content: "Review Cart",
+              onAction: () => {
+                router.push("/cart");
+              },
+            },
+          ], //TODO: Show list of items
         },
       ]}
     />

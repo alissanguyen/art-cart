@@ -1,24 +1,23 @@
-import { Button, Card, Layout, Page, Thumbnail } from "@shopify/polaris";
+import { Button, Card, Layout, Page } from "@shopify/polaris";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
 import { useUserDataContext } from "../../components/Providers/UserDataProvider";
+import { User } from "../../types";
 
 interface Props {}
 
 const ArtworkDetailPage: React.FC<Props> = ({}) => {
   const router = useRouter();
 
+  const { artworks } = useArtworkDataContext();
+  const { users } = useUserDataContext();
+
   if (!router.query.all) {
     return null;
   }
 
   const [id] = router.query.all as [string, string];
-
-  const { artworks } = useArtworkDataContext();
-  const { users } = useUserDataContext();
-
-  console.log(users);
 
   const artwork = artworks[id];
 
@@ -82,8 +81,10 @@ const ArtworkDetailPage: React.FC<Props> = ({}) => {
               {artist?.displayName ? artist.displayName : "[Deleted User]"}
             </Card.Section>
             <Card.Section>
-            {/* TODO: implement loading state */}
-              <Button primary loading={false}>Add to Cart</Button> 
+              {/* TODO: implement loading state */}
+              <Button primary loading={false}>
+                Add to Cart
+              </Button>
             </Card.Section>
           </Card>
         </Layout.Section>

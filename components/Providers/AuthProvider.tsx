@@ -2,9 +2,10 @@ import * as React from "react";
 import { initializeFirebaseApp } from "../../lib/firebase/firebase";
 import firebase from "firebase/app";
 import { getFirstAndLastName } from "../../utils/sanitization";
+import { LoggedInUser } from "../../types";
 
 interface AuthContextValue {
-  user: LoggedInUser | null;
+  userAuthentication: LoggedInUser | null;
   login: (user: LoggedInUser) => void;
   logOut: () => void;
 }
@@ -49,7 +50,7 @@ const AuthProvider: React.FC = (props) => {
   return (
     <AuthContext.Provider
       value={{
-        user,
+        userAuthentication: user,
         login,
         logOut,
       }}

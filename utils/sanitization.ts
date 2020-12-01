@@ -1,7 +1,9 @@
 import {
   RawFirestoreArtwork,
+  RawFirestoreCart,
   RawFirestoreUser,
 } from "../firestore-collections";
+import { Cart, Artwork, User } from "../types";
 
 export const sanitizeArtwork = (
   rawFirestoreArtwork: RawFirestoreArtwork
@@ -14,7 +16,7 @@ export const sanitizeArtwork = (
     previewImageSrc: rawFirestoreArtwork.preview_image_src,
     displayName: rawFirestoreArtwork.display_name,
     id: rawFirestoreArtwork.id,
-    isFavorited: false, 
+    isFavorited: false,
     // TODO: reference the likes of the currently logged in user and see if the ID of this artwork exists in the set of liked artwork IDs in the user object.
   };
 };
@@ -24,6 +26,13 @@ export const sanitizeUser = (rawFirestoreUser: RawFirestoreUser): User => {
     displayName: rawFirestoreUser.display_name,
     bio: rawFirestoreUser.bio,
     id: rawFirestoreUser.id,
+  };
+};
+
+export const sanitizeCart = (rawFirestoreCart: RawFirestoreCart): Cart => {
+  return {
+    userId: rawFirestoreCart.user_id,
+    itemsInCart: rawFirestoreCart.items_in_cart,
   };
 };
 

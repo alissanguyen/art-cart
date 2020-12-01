@@ -49,8 +49,6 @@ export const signInWithGithub = async (): Promise<LoggedInUser> => {
     loginResult.credential.accessToken
   );
 
-  console.log(credentials);
-
   const parsedName =
     typeof loginResult.additionalUserInfo?.profile?.name === "string"
       ? getFirstAndLastName(loginResult.additionalUserInfo?.profile?.name)

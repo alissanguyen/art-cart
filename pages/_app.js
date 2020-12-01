@@ -10,6 +10,7 @@ import { initializeFirebaseApp } from "../lib/firebase/firebase";
 import AuthProvider from "../components/Providers/AuthProvider";
 import ArtworkDataProvider from "../components/Providers/ArtworkDataProvider";
 import UserDataProvider from "../components/Providers/UserDataProvider";
+import CartDataProvider from "../components/Providers/CartDataProvider";
 
 function MyApp({ Component, pageProps }) {
   React.useEffect(() => {
@@ -17,25 +18,27 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <UserDataProvider>
-      <ArtworkDataProvider>
-        <AuthProvider>
-          <Head>
-            <link rel="icon" href="/logo.svg" />
-            <meta
-              name="viewport"
-              content="width=device-width, initial-scale=1"
-            />
-            <meta name="theme-color" content="#000000" />
-          </Head>
-          <AppProvider theme={APP_THEME} i18n={enTranslations}>
-            <NavbarFrame>
-              <Component {...pageProps} />
-            </NavbarFrame>
-          </AppProvider>
-        </AuthProvider>
-      </ArtworkDataProvider>
-    </UserDataProvider>
+    <AuthProvider>
+      <UserDataProvider>
+        <ArtworkDataProvider>
+          <CartDataProvider>
+            <Head>
+              <link rel="icon" href="/logo.svg" />
+              <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1"
+              />
+              <meta name="theme-color" content="#000000" />
+            </Head>
+            <AppProvider theme={APP_THEME} i18n={enTranslations}>
+              <NavbarFrame>
+                <Component {...pageProps} />
+              </NavbarFrame>
+            </AppProvider>
+          </CartDataProvider>
+        </ArtworkDataProvider>
+      </UserDataProvider>
+    </AuthProvider>
   );
 }
 

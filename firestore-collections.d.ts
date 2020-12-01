@@ -13,3 +13,11 @@ export interface RawFirestoreUser {
   bio: string;
   id: string;
 }
+
+type ProductId = string;
+type Quantity = number
+
+export interface RawFirestoreCart {
+  user_id: string;
+  items_in_cart: Record<ProductId, Quantity>
+}

@@ -2,7 +2,9 @@ import * as React from "react";
 import { RawFirestoreUser } from "../../firestore-collections";
 import { transformFirestoreData } from "../../lib/firebase/dataTransforms";
 import { initializeFirebaseApp } from "../../lib/firebase/firebase";
+import { User } from "../../types";
 import { sanitizeUser } from "../../utils/sanitization";
+import { useAuthContext } from "./AuthProvider";
 
 interface UserDataContextValue {
   users: Record<string, User>;
@@ -15,8 +17,14 @@ const UserDataContext = React.createContext<UserDataContextValue | undefined>(
 const UserDataProvider: React.FC = (props) => {
   const [userData, setUserData] = React.useState<Record<string, User>>({});
 
+  const { userAuthentication } = useAuthContext();
+
   React.useEffect(() => {
     const fetchUserData = async () => {
+      if (!userAuthentication) {
+        return;
+      }
+
       const { FirestoreInstance } = initializeFirebaseApp();
       const rawUsers = await FirestoreInstance.collection("users").get();
       const formattedUsers = transformFirestoreData<RawFirestoreUser>(rawUsers);
@@ -32,7 +40,7 @@ const UserDataProvider: React.FC = (props) => {
     };
 
     fetchUserData();
-  }, []);
+  }, [userAuthentication]);
 
   return (
     <UserDataContext.Provider value={{ users: userData }}>

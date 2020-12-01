@@ -1,4 +1,6 @@
-interface LoggedInUser {
+import { Quanity } from "./firestore-collections";
+
+export interface LoggedInUser {
   id: string;
   username: string;
   avatarUrl: string | null;
@@ -8,7 +10,7 @@ interface LoggedInUser {
   favoritedArtworkIds: Record<string, string>;
 }
 
-interface Artwork {
+export interface Artwork {
   id: string;
   displayName: string;
   priceInUsd: number;
@@ -20,14 +22,19 @@ interface Artwork {
 
 }
 
-type ProductNotableBadgeId =
+export type ProductNotableBadgeId =
   | "best_seller"
   | "trending"
   | "free_shipping"
   | "limited_edition";
 
-interface User {
+export interface User {
   displayName: string;
   id: string;
   bio: string;
+}
+
+export interface Cart {
+  userId: string;
+  itemsInCart: Record<ProductId, Quanity>
 }
