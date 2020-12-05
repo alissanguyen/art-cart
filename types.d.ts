@@ -1,4 +1,4 @@
-import { Quanity } from "./firestore-collections";
+import { ProductInCart, Quantity } from "./firestore-collections";
 
 export interface LoggedInUser {
   id: string;
@@ -19,7 +19,6 @@ export interface Artwork {
   isFavorited: boolean;
   numberOfFavorites: number;
   previewImageSrc: string;
-
 }
 
 export type ProductNotableBadgeId =
@@ -36,5 +35,5 @@ export interface User {
 
 export interface Cart {
   userId: string;
-  itemsInCart: Record<ProductId, Quanity>
+  itemsInCart: Record<ProductId, Quantity>;
 }

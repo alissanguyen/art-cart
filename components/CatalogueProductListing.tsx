@@ -3,32 +3,21 @@ import * as React from "react";
 import FavoriteIcon from "./Reusable/FavoriteIcon";
 import styles from "../styles/Catalogue.module.css";
 import Link from "next/link";
+import { currencyFormatter, productIdAndNameToPath } from "../utils/strings";
+import { Artwork, User } from "../types";
 
 interface Props {
   artwork: Artwork;
   associatedArtist?: User;
 }
 
-const currencyFormatter = (currency: number) => {
-  const newFormat = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  });
-  return newFormat.format(currency);
-};
 
-function urlGenerate(string: string) {
-  const splittedString = string.toLowerCase().split(" ");
-  const reducer = (acc: string, cur: string) => acc + "-" + cur;
-  const url = splittedString.reduce(reducer);
-  return url;
-}
 
 const CatalogueProductListing: React.FC<Props> = (props) => {
-  const url = `/c/${props.artwork.id}/${urlGenerate(
+  const url = productIdAndNameToPath(
+    props.artwork.id,
     props.artwork.displayName
-  )}`;
+  );
   return (
     <Link href={url}>
       <a className="Catalogue__EntireCatalogue">

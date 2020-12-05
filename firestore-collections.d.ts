@@ -6,6 +6,7 @@ export interface RawFirestoreArtwork {
   preview_image_src: string;
   display_name: string;
   id: string;
+  url: string
 }
 
 export interface RawFirestoreUser {
@@ -15,7 +16,9 @@ export interface RawFirestoreUser {
 }
 
 type ProductId = string;
-type Quantity = number
+type Quantity = number;
+
+
 
 export interface RawFirestoreCart {
   user_id: string;

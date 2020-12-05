@@ -57,7 +57,7 @@ const PostNewArtwork: React.FC<Props> = ({}) => {
         <Layout.Section fullWidth>
           <Form
             onSubmit={() => {
-              postNewArtwork();
+              postNewArtwork(); //TODO: implement this
             }}
           >
             <FormLayout>

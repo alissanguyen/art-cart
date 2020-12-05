@@ -34,15 +34,13 @@ const CartDataProvider: React.FC = (props) => {
 
       const formattedCarts = transformFirestoreData<RawFirestoreCart>(rawCarts);
 
-      
-
       const cartForThisUser = sanitizeCart(formattedCarts[0]);
 
       setCartData(cartForThisUser);
     };
 
     fetchCartData();
-  }, []);
+  }, [user]);
 
   return (
     <CartDataContext.Provider value={{ cart: cartData }}>

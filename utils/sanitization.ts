@@ -1,9 +1,10 @@
+import { stringify } from "querystring";
 import {
   RawFirestoreArtwork,
   RawFirestoreCart,
   RawFirestoreUser,
 } from "../firestore-collections";
-import { Cart, Artwork, User } from "../types";
+import { Cart, Artwork, User, ProductInCart, Product } from "../types";
 
 export const sanitizeArtwork = (
   rawFirestoreArtwork: RawFirestoreArtwork

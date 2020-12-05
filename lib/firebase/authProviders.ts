@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import { LoggedInUser } from "../../types";
 import { getFirstAndLastName } from "../../utils/sanitization";
 import { FirebaseInstance, initializeFirebaseApp } from "./firebase";
 
