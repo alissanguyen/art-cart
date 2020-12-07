@@ -14,7 +14,7 @@ import Anchor from "../../components/Reusable/Anchor";
 import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
 import { Artwork } from "../../types";
 import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 
 interface Props {}
 
@@ -29,6 +29,11 @@ const CartPage: React.FC<Props> = ({}) => {
   const { artworks } = useArtworkDataContext();
 
   const router = useRouter();
+
+  const checkOut = () => {
+      router.push('/checkout')
+    //TODO: implement this
+  }
 
   if (!cart) {
     return (
@@ -72,28 +77,55 @@ const CartPage: React.FC<Props> = ({}) => {
     }
   );
 
-  const emptyCartMarkup = 
+  console.log(itemsToRenderAsResourceListItems);
+
+  var totalCost = 0;
+
+  for (let i = 0; i < itemsToRenderAsResourceListItems.length; i++) {
+    totalCost +=
+      itemsToRenderAsResourceListItems[i].priceInUsd *
+      itemsToRenderAsResourceListItems[i].quantity;
+  }
+
+  const emptyCartMarkup =
     cart && arrayItemsInCart.length == 0 ? (
-    <Card>
-      <img src="empty_cart.svg" />
-      <EmptyState
-        heading="Your Cart is empty!"
-        action={{ content: "Browse Catalogue", onAction:() => {router.push("/c")}  }}
-        image=''
-      ></EmptyState>
-    </Card>
-  ) : undefined ;
+      <Card>
+        <img src="empty_cart.svg" />
+        <EmptyState
+          heading="Your Cart is empty!"
+          action={{
+            content: "Browse Catalogue",
+            onAction: () => {
+              router.push("/c");
+            },
+          }}
+          image=""
+        ></EmptyState>
+      </Card>
+    ) : undefined;
 
   return (
     <Page title="Your Cart">
-      <Card>
+      <Card primaryFooterAction={{ content: "Check out", onAction: checkOut }}>
         <ResourceList
           emptyState={emptyCartMarkup}
           items={itemsToRenderAsResourceListItems}
+          alternateTool={<Button submit>Clear Cart</Button>}
           renderItem={(item: Artwork & { quantity: number }) => {
+            const shortcutActions = [
+              {
+                content: "+",
+                onAction: () => {},
+              },
+              {
+                content: "-",
+                onAction: () => {},
+              },
+            ];
             return (
               <ResourceItem
                 id={item.id}
+                shortcutActions={shortcutActions}
                 onClick={() => {
                   router.push(
                     productIdAndNameToPath(item.id, item.displayName)
@@ -110,11 +142,19 @@ const CartPage: React.FC<Props> = ({}) => {
                 <h3>
                   <TextStyle variation="strong">{item.displayName}</TextStyle>
                 </h3>
-                <div>{currencyFormatter(item.priceInUsd * item.quantity)}</div>
+                <div> Price: {currencyFormatter(item.priceInUsd)}</div>
+                <div> Quantity: {item.quantity}</div>
+                <div>
+                  {" "}
+                  Total: {currencyFormatter(item.priceInUsd * item.quantity)}
+                </div>
               </ResourceItem>
             );
           }}
         />
+        <Card.Section title="Total">
+          <p>{currencyFormatter(totalCost)}</p>
+        </Card.Section>
       </Card>
     </Page>
   );
