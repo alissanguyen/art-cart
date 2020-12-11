@@ -1,10 +1,9 @@
-import { stringify } from "querystring";
 import {
   RawFirestoreArtwork,
   RawFirestoreCart,
   RawFirestoreUser,
 } from "../firestore-collections";
-import { Cart, Artwork, User, ProductInCart, Product } from "../types";
+import { Artwork, Cart, User } from "../types";
 
 export const sanitizeArtwork = (
   rawFirestoreArtwork: RawFirestoreArtwork
@@ -32,8 +31,9 @@ export const sanitizeUser = (rawFirestoreUser: RawFirestoreUser): User => {
 
 export const sanitizeCart = (rawFirestoreCart: RawFirestoreCart): Cart => {
   return {
+    id: rawFirestoreCart.id,
     userId: rawFirestoreCart.user_id,
-    itemsInCart: rawFirestoreCart.items_in_cart,
+    itemsInCart: transformItemsInCart(rawFirestoreCart.items_in_cart),
   };
 };
 
@@ -42,4 +42,29 @@ export const getFirstAndLastName = (fullName: string) => {
     firstName: fullName.split(" ")[0],
     lastName: fullName.split(" ")[1],
   };
+};
+
+/**
+ * Go through this object that looks like
+ * {
+ *  'id_123': '3',
+ *  'id_345': '5',
+ *  'id_678': '9'
+ * }
+ *
+ * such that all the values are numbers but everything else is kept the same
+ *
+ *
+ * @param itemsInCart
+ */
+const transformItemsInCart = (
+  itemsInCart: Record<string, string>
+): Record<string, number> => {
+  return Object.entries(itemsInCart).reduce<Record<string, number>>(
+    (acc, [key, value]) => {
+      acc[key] = +value;
+      return acc;
+    },
+    {}
+  );
 };

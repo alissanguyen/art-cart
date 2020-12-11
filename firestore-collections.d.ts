@@ -16,11 +16,12 @@ export interface RawFirestoreUser {
 }
 
 type ProductId = string;
-type Quantity = number;
+type Quantity = string;
 
 
 
 export interface RawFirestoreCart {
+  id: string;
   user_id: string;
   items_in_cart: Record<ProductId, Quantity>
 }

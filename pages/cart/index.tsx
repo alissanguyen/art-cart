@@ -12,15 +12,16 @@ import {
 import { useCartDataContext } from "../../components/Providers/CartDataProvider";
 import Anchor from "../../components/Reusable/Anchor";
 import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
-import { Artwork } from "../../types";
+import { Artwork, Cart } from "../../types";
 import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
 import { Router, useRouter } from "next/router";
+import { FirestoreInstance } from "../../lib/firebase/firebase";
+import { useAuthContext } from "../../components/Providers/AuthProvider";
 
 interface Props {}
 
 /**
- * 1. We have the ids of each product in the users cart. Can you render a thumbnail and a name and quantity for each one?  with a subtotal at the bottom
- * 2. Implement the add to cart button functionality. Only make it work for logged in users for now.
+ *
  * 3. (bonus) implement the remove from cart functionality and editing quantity of items
  */
 
@@ -31,11 +32,11 @@ const CartPage: React.FC<Props> = ({}) => {
   const router = useRouter();
 
   const checkOut = () => {
-      router.push('/checkout')
+    router.push("/checkout");
     //TODO: implement this
-  }
+  };
 
-  if (!cart) {
+  if (!cart || !artworks) {
     return (
       <Page title="Your Cart">
         <Card
@@ -64,7 +65,7 @@ const CartPage: React.FC<Props> = ({}) => {
   });
 
   /**
-   * Convert this item id and quantity into a full artwor
+   * Convert this item id and quantity into a full artwork
    */
   const itemsToRenderAsResourceListItems = arrayItemsInCart.map(
     (item): Artwork & { quantity: number } => {
@@ -76,8 +77,6 @@ const CartPage: React.FC<Props> = ({}) => {
       };
     }
   );
-
-  console.log(itemsToRenderAsResourceListItems);
 
   var totalCost = 0;
 
@@ -104,6 +103,22 @@ const CartPage: React.FC<Props> = ({}) => {
       </Card>
     ) : undefined;
 
+  const Cart = FirestoreInstance.collection("carts").doc(`${cart.id}`);
+
+  function incrementItemInCart(item: Artwork & { quantity: number }) {
+    // TODO: Update UI 
+    Cart.update({
+      [`items_in_cart.${item.id}`]: `${item.quantity + 1}`,
+    });
+  }
+
+  function decrementItemInCart(item: Artwork & { quantity: number }) {
+    Cart.update({
+      [`items_in_cart.${item.id}`]: `${item.quantity - 1}`,
+    });
+  }
+
+
   return (
     <Page title="Your Cart">
       <Card primaryFooterAction={{ content: "Check out", onAction: checkOut }}>
@@ -114,12 +129,12 @@ const CartPage: React.FC<Props> = ({}) => {
           renderItem={(item: Artwork & { quantity: number }) => {
             const shortcutActions = [
               {
-                content: "+",
-                onAction: () => {},
+                content: "-",
+                onAction: () => decrementItemInCart(item),
               },
               {
-                content: "-",
-                onAction: () => {},
+                content: "+",
+                onAction: () => incrementItemInCart(item),
               },
             ];
             return (

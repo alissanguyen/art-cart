@@ -1,4 +1,4 @@
-import { ProductInCart, Quantity } from "./firestore-collections";
+import { ProductInCart } from "./firestore-collections";
 
 export interface LoggedInUser {
   id: string;
@@ -34,6 +34,7 @@ export interface User {
 }
 
 export interface Cart {
+  id: string;
   userId: string;
-  itemsInCart: Record<ProductId, Quantity>;
+  itemsInCart: Record<ProductId, number>;
 }
