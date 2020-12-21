@@ -6,6 +6,7 @@ export let FirebaseInstance: firebase.app.App | null = null;
 
 export let FirestoreInstance: firebase.firestore.Firestore;
 
+
 export const initializeFirebaseApp = () => {
   if (!FirebaseInstance && !firebase.apps.length) {
     FirebaseInstance = firebase.initializeApp(FIREBASE_CONFIG);

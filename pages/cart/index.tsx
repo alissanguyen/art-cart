@@ -1,7 +1,9 @@
 import {
+  Banner,
   Button,
   Card,
   EmptyState,
+  Modal,
   Page,
   ResourceItem,
   ResourceList,
@@ -15,7 +17,10 @@ import { useArtworkDataContext } from "../../components/Providers/ArtworkDataPro
 import { useCartDataContext } from "../../components/Providers/CartDataProvider";
 import Anchor from "../../components/Reusable/Anchor";
 import Spinner from "../../components/Reusable/Spinner";
-import { FirestoreInstance } from "../../lib/firebase/firebase";
+import {
+  FirebaseInstance,
+  FirestoreInstance,
+} from "../../lib/firebase/firebase";
 import { Artwork } from "../../types";
 import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
 
@@ -23,7 +28,7 @@ interface Props {}
 
 /**
  *
- * 3. (bonus) implement the remove from cart functionality and clear cart
+ * 3. (bonus) implement the remove from cart functionality 
  */
 
 const CartPage: React.FC<Props> = ({}) => {
@@ -37,11 +42,10 @@ const CartPage: React.FC<Props> = ({}) => {
     //TODO: implement this
   };
 
-
   /**
-  * Cart is errored if cartError is not undefined;
-  * ArtworkData is errored if artworkDataError is not undefined;
-  */
+   * Cart is errored if cartError is not undefined;
+   * ArtworkData is errored if artworkDataError is not undefined;
+   */
   if (cartError !== undefined || artworkDataError !== undefined) {
     return (
       <Page title="Your Cart">
@@ -141,6 +145,12 @@ const CartPage: React.FC<Props> = ({}) => {
     });
   }
 
+  const FieldValue = require("firebase").firestore.FieldValue;
+  function clearCart() {
+    cartDocumentForThisUser.update({
+      items_in_cart: FieldValue.delete(),
+    });
+  }
   /**
    * Cart is successfully loaded if cart is not undefined and cartError is undefined;
    * Artworks are successfully loaded if artworkData is not undefined and artworkDataError is undefined
@@ -151,7 +161,11 @@ const CartPage: React.FC<Props> = ({}) => {
         <ResourceList
           emptyState={emptyCartMarkup}
           items={itemsToRenderAsResourceListItems}
-          alternateTool={<Button submit>Clear Cart</Button>}
+          alternateTool={
+            <Button onClick={() => clearCart()} submit>
+              Clear Cart
+            </Button>
+          }
           renderItem={(item: Artwork & { quantity: number }) => {
             const shortcutActions = [
               {
