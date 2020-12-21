@@ -11,6 +11,7 @@ import AuthProvider from "../components/Providers/AuthProvider";
 import ArtworkDataProvider from "../components/Providers/ArtworkDataProvider";
 import UserDataProvider from "../components/Providers/UserDataProvider";
 import CartDataProvider from "../components/Providers/CartDataProvider";
+import "../components/Reusable/spinner.css";
 
 function MyApp({ Component, pageProps }) {
   React.useEffect(() => {

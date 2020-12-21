@@ -5,6 +5,8 @@ import {
   Page,
   ResourceItem,
   ResourceList,
+  Spinner,
+  Stack,
   TextStyle,
   Thumbnail,
 } from "@shopify/polaris";
@@ -13,6 +15,7 @@ import * as React from "react";
 import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
 import { useCartDataContext } from "../../components/Providers/CartDataProvider";
 import Anchor from "../../components/Reusable/Anchor";
+import AlissasSpinner from "../../components/Reusable/Spinner";
 import { FirestoreInstance } from "../../lib/firebase/firebase";
 import { Artwork } from "../../types";
 import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
@@ -25,7 +28,7 @@ interface Props {}
  */
 
 const CartPage: React.FC<Props> = ({}) => {
-  const { cart } = useCartDataContext();
+  const { cart, cartError } = useCartDataContext();
   const { artworks } = useArtworkDataContext();
 
   const router = useRouter();
@@ -35,7 +38,15 @@ const CartPage: React.FC<Props> = ({}) => {
     //TODO: implement this
   };
 
-  if (!cart || !artworks) {
+  /**
+   * We know that the cart is loading if cart is undefined and cartError is undefined;
+   *
+   * we know that the cart is errored if cartError is not undefined;
+   *
+   * We know that the cart is successfully loading if cart is not undefined and cartError is undefined
+   */
+
+  if (cartError !== undefined /** || artworkError  */) {
     return (
       <Page title="Your Cart">
         <Card
@@ -50,6 +61,21 @@ const CartPage: React.FC<Props> = ({}) => {
               <Button>Go back to Catalogue page</Button>
             </Anchor>
           </Card.Section>
+        </Card>
+      </Page>
+    );
+  }
+
+  if (!cart || !artworks) {
+    return (
+      <Page title="Your Cart">
+        <Card>
+          <Stack distribution="center" alignment="center" vertical>
+            {/* <Spinner size="large" hasFocusableParent />
+             */}
+            <AlissasSpinner />
+         
+          </Stack>
         </Card>
       </Page>
     );

@@ -11,6 +11,7 @@ import { useAuthContext } from "./AuthProvider";
 
 interface CartDataContextValue {
   cart: Cart | undefined;
+  cartError: string | undefined;
 }
 
 const CartDataContext = React.createContext<CartDataContextValue | undefined>(
@@ -19,6 +20,9 @@ const CartDataContext = React.createContext<CartDataContextValue | undefined>(
 
 const CartDataProvider: React.FC = (props) => {
   const [cartData, setCartData] = React.useState<Cart | undefined>(undefined);
+  const [cartError, setCartError] = React.useState<string | undefined>(
+    undefined
+  );
 
   const cartUnsubscribeFunctionRef = React.useRef<null | (() => void)>(null);
 
@@ -35,7 +39,16 @@ const CartDataProvider: React.FC = (props) => {
 
       const rawCarts = await FirestoreInstance.collection("carts")
         .where("user_id", "==", user.id)
-        .get();
+        .get()
+        .catch((e) => {
+          console.error(e);
+
+          setCartError("Failed to find a cart for this user.");
+        });
+
+      if (!rawCarts) {
+        return;
+      }
 
       const formattedCarts = transformFirestoreQueryResultData<RawFirestoreCart>(
         rawCarts
@@ -59,6 +72,9 @@ const CartDataProvider: React.FC = (props) => {
               transformRawFirestoreDocument<RawFirestoreCart>(changedCart)
             )
           );
+
+          // Make sure we clear the error
+          setCartError(undefined);
         });
 
       setCartData(cartForThisUser);
@@ -82,7 +98,7 @@ const CartDataProvider: React.FC = (props) => {
   }, [user]);
 
   return (
-    <CartDataContext.Provider value={{ cart: cartData }}>
+    <CartDataContext.Provider value={{ cart: cartData, cartError }}>
       {props.children}
     </CartDataContext.Provider>
   );
