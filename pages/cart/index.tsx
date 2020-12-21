@@ -5,7 +5,6 @@ import {
   Page,
   ResourceItem,
   ResourceList,
-  Spinner,
   Stack,
   TextStyle,
   Thumbnail,
@@ -15,7 +14,7 @@ import * as React from "react";
 import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
 import { useCartDataContext } from "../../components/Providers/CartDataProvider";
 import Anchor from "../../components/Reusable/Anchor";
-import AlissasSpinner from "../../components/Reusable/Spinner";
+import Spinner from "../../components/Reusable/Spinner";
 import { FirestoreInstance } from "../../lib/firebase/firebase";
 import { Artwork } from "../../types";
 import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
@@ -24,12 +23,12 @@ interface Props {}
 
 /**
  *
- * 3. (bonus) implement the remove from cart functionality and editing quantity of items
+ * 3. (bonus) implement the remove from cart functionality and clear cart
  */
 
 const CartPage: React.FC<Props> = ({}) => {
   const { cart, cartError } = useCartDataContext();
-  const { artworks } = useArtworkDataContext();
+  const { artworks, artworkDataError } = useArtworkDataContext();
 
   const router = useRouter();
 
@@ -38,15 +37,12 @@ const CartPage: React.FC<Props> = ({}) => {
     //TODO: implement this
   };
 
-  /**
-   * We know that the cart is loading if cart is undefined and cartError is undefined;
-   *
-   * we know that the cart is errored if cartError is not undefined;
-   *
-   * We know that the cart is successfully loading if cart is not undefined and cartError is undefined
-   */
 
-  if (cartError !== undefined /** || artworkError  */) {
+  /**
+  * Cart is errored if cartError is not undefined;
+  * ArtworkData is errored if artworkDataError is not undefined;
+  */
+  if (cartError !== undefined || artworkDataError !== undefined) {
     return (
       <Page title="Your Cart">
         <Card
@@ -66,15 +62,16 @@ const CartPage: React.FC<Props> = ({}) => {
     );
   }
 
+  /**
+   * Cart is loading if cart is undefined and cartError is undefined;
+   * ArtworkData is loading if artworks are undefined and artworkDataError is undefined;
+   */
   if (!cart || !artworks) {
     return (
       <Page title="Your Cart">
         <Card>
-          <Stack distribution="center" alignment="center" vertical>
-            {/* <Spinner size="large" hasFocusableParent />
-             */}
-            <AlissasSpinner />
-         
+          <Stack distribution="center" alignment="center">
+            <Spinner />
           </Stack>
         </Card>
       </Page>
@@ -133,7 +130,6 @@ const CartPage: React.FC<Props> = ({}) => {
   );
 
   function incrementItemInCart(item: Artwork & { quantity: number }) {
-    // TODO: Update UI
     cartDocumentForThisUser.update({
       [`items_in_cart.${item.id}`]: `${item.quantity + 1}`,
     });
@@ -145,6 +141,10 @@ const CartPage: React.FC<Props> = ({}) => {
     });
   }
 
+  /**
+   * Cart is successfully loaded if cart is not undefined and cartError is undefined;
+   * Artworks are successfully loaded if artworkData is not undefined and artworkDataError is undefined
+   */
   return (
     <Page title="Your Cart">
       <Card primaryFooterAction={{ content: "Check out", onAction: checkOut }}>

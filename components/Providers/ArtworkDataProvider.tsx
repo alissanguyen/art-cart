@@ -8,6 +8,7 @@ import { useAuthContext } from "./AuthProvider";
 
 interface ArtworkDataContextValue {
   artworks: Record<string, Artwork>;
+  artworkDataError: string | undefined;
 }
 
 const ArtworkDataContext = React.createContext<
@@ -18,12 +19,22 @@ const ArtworkDataProvider: React.FC = (props) => {
   const [artworkData, setArtworkData] = React.useState<Record<string, Artwork>>(
     {}
   );
+  const [artworkDataError, setArtworkDataError] = React.useState<string | undefined>(undefined)
 
   const { userAuthentication } = useAuthContext();
 
   React.useEffect(() => {
     const fetchArtworkData = async () => {
-      const rawArtworks = await FirestoreInstance.collection("artwork").get();
+      const rawArtworks = await FirestoreInstance.collection("artwork").get().catch((e) => {
+        console.error(e);
+
+        setArtworkDataError("Failed to load artworks.");
+      });
+
+      if (!rawArtworks) {
+        return;
+      }
+      
       const formattedArtworks = transformFirestoreQueryResultData<RawFirestoreArtwork>(
         rawArtworks
       );
@@ -36,13 +47,14 @@ const ArtworkDataProvider: React.FC = (props) => {
         }, {});
 
       setArtworkData(artworksRecord);
+      setArtworkDataError(undefined)
     };
 
     fetchArtworkData();
   }, [userAuthentication]);
 
   return (
-    <ArtworkDataContext.Provider value={{ artworks: artworkData }}>
+    <ArtworkDataContext.Provider value={{ artworks: artworkData, artworkDataError: artworkDataError }}>
       {props.children}
     </ArtworkDataContext.Provider>
   );
