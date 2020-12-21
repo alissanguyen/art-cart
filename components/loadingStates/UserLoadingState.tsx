@@ -5,7 +5,7 @@ interface Props {
 }
 
 const UserLoadingState: React.FC<Props> = ({ }) => {
-    
+
  return (
  <div>Hi</div>
  )

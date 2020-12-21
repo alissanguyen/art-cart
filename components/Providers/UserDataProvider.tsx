@@ -1,6 +1,6 @@
 import * as React from "react";
 import { RawFirestoreUser } from "../../firestore-collections";
-import { transformFirestoreData } from "../../lib/firebase/dataTransforms";
+import { transformFirestoreQueryResultData } from "../../lib/firebase/dataTransforms";
 import { initializeFirebaseApp } from "../../lib/firebase/firebase";
 import { User } from "../../types";
 import { sanitizeUser } from "../../utils/sanitization";
@@ -27,7 +27,7 @@ const UserDataProvider: React.FC = (props) => {
 
       const { FirestoreInstance } = initializeFirebaseApp();
       const rawUsers = await FirestoreInstance.collection("users").get();
-      const formattedUsers = transformFirestoreData<RawFirestoreUser>(rawUsers);
+      const formattedUsers = transformFirestoreQueryResultData<RawFirestoreUser>(rawUsers);
 
       const usersRecord = formattedUsers
         .map(sanitizeUser)

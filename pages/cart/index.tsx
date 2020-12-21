@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   Button,
   Card,
@@ -9,14 +8,14 @@ import {
   TextStyle,
   Thumbnail,
 } from "@shopify/polaris";
+import { useRouter } from "next/router";
+import * as React from "react";
+import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
 import { useCartDataContext } from "../../components/Providers/CartDataProvider";
 import Anchor from "../../components/Reusable/Anchor";
-import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
-import { Artwork, Cart } from "../../types";
-import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
-import { Router, useRouter } from "next/router";
 import { FirestoreInstance } from "../../lib/firebase/firebase";
-import { useAuthContext } from "../../components/Providers/AuthProvider";
+import { Artwork } from "../../types";
+import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
 
 interface Props {}
 
@@ -103,21 +102,22 @@ const CartPage: React.FC<Props> = ({}) => {
       </Card>
     ) : undefined;
 
-  const Cart = FirestoreInstance.collection("carts").doc(`${cart.id}`);
+  const cartDocumentForThisUser = FirestoreInstance.collection("carts").doc(
+    `${cart.id}`
+  );
 
   function incrementItemInCart(item: Artwork & { quantity: number }) {
-    // TODO: Update UI 
-    Cart.update({
+    // TODO: Update UI
+    cartDocumentForThisUser.update({
       [`items_in_cart.${item.id}`]: `${item.quantity + 1}`,
     });
   }
 
   function decrementItemInCart(item: Artwork & { quantity: number }) {
-    Cart.update({
+    cartDocumentForThisUser.update({
       [`items_in_cart.${item.id}`]: `${item.quantity - 1}`,
     });
   }
-
 
   return (
     <Page title="Your Cart">

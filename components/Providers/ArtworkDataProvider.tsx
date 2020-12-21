@@ -1,6 +1,6 @@
 import * as React from "react";
 import { RawFirestoreArtwork } from "../../firestore-collections";
-import { transformFirestoreData } from "../../lib/firebase/dataTransforms";
+import { transformFirestoreQueryResultData } from "../../lib/firebase/dataTransforms";
 import { FirestoreInstance } from "../../lib/firebase/firebase";
 import { Artwork } from "../../types";
 import { sanitizeArtwork } from "../../utils/sanitization";
@@ -24,7 +24,7 @@ const ArtworkDataProvider: React.FC = (props) => {
   React.useEffect(() => {
     const fetchArtworkData = async () => {
       const rawArtworks = await FirestoreInstance.collection("artwork").get();
-      const formattedArtworks = transformFirestoreData<RawFirestoreArtwork>(
+      const formattedArtworks = transformFirestoreQueryResultData<RawFirestoreArtwork>(
         rawArtworks
       );
 

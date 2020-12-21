@@ -1,6 +1,9 @@
 import * as React from "react";
 import { RawFirestoreCart } from "../../firestore-collections";
-import { transformFirestoreData } from "../../lib/firebase/dataTransforms";
+import {
+  transformFirestoreQueryResultData,
+  transformRawFirestoreDocument,
+} from "../../lib/firebase/dataTransforms";
 import { FirestoreInstance } from "../../lib/firebase/firebase";
 import { Cart } from "../../types";
 import { sanitizeCart } from "../../utils/sanitization";
@@ -17,6 +20,8 @@ const CartDataContext = React.createContext<CartDataContextValue | undefined>(
 const CartDataProvider: React.FC = (props) => {
   const [cartData, setCartData] = React.useState<Cart | undefined>(undefined);
 
+  const cartUnsubscribeFunctionRef = React.useRef<null | (() => void)>(null);
+
   const { userAuthentication: user } = useAuthContext();
 
   React.useEffect(() => {
@@ -32,14 +37,48 @@ const CartDataProvider: React.FC = (props) => {
         .where("user_id", "==", user.id)
         .get();
 
-      const formattedCarts = transformFirestoreData<RawFirestoreCart>(rawCarts);
+      const formattedCarts = transformFirestoreQueryResultData<RawFirestoreCart>(
+        rawCarts
+      );
 
       const cartForThisUser = sanitizeCart(formattedCarts[0]);
+
+      /**
+       * Set up the subscription
+       */
+
+      cartUnsubscribeFunctionRef.current = FirestoreInstance.collection("carts")
+        .doc(cartForThisUser.id)
+        .onSnapshot((changedCart) => {
+          const newCart = changedCart;
+
+          console.log("CHANGE TO CART DETECTED", newCart);
+
+          setCartData(
+            sanitizeCart(
+              transformRawFirestoreDocument<RawFirestoreCart>(changedCart)
+            )
+          );
+        });
 
       setCartData(cartForThisUser);
     };
 
     fetchCartData();
+  }, [user]);
+
+  /**
+   *
+   */
+
+  React.useEffect(() => {
+    /**
+     * On logout or component/app unmount, remove the subscription to prevent memory leaks and excess network requests.
+     */
+
+    if (!user && cartUnsubscribeFunctionRef.current) {
+      cartUnsubscribeFunctionRef.current();
+    }
   }, [user]);
 
   return (
