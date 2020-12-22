@@ -109,10 +109,17 @@ const CartPage: React.FC<Props> = ({}) => {
       itemsToRenderAsResourceListItems[i].quantity;
   }
 
+  const emptyCartIconStyle = {
+    height: "400px",
+    width: "400px",
+    minInlineSize: '-webkit-fill-available',
+    margin: '40px'
+  };
+  
   const emptyCartMarkup =
     cart && arrayItemsInCart.length == 0 ? (
       <Card>
-        <img src="empty_cart.svg" />
+        <img src="/empty-cart.svg" alt="" style={emptyCartIconStyle} />
         <EmptyState
           heading="Your Cart is empty!"
           action={{

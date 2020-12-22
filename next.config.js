@@ -5,6 +5,10 @@ module.exports = {
     // Note: we provide webpack above so you should not `require` it
     // Perform customizations to webpack config
     config.plugins.push(TypeScriptPluginCssModules);
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"],
+    });
 
     // Important: return the modified config
     return config;
