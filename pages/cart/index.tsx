@@ -18,7 +18,6 @@ import { useCartDataContext } from "../../components/Providers/CartDataProvider"
 import Anchor from "../../components/Reusable/Anchor";
 import Spinner from "../../components/Reusable/Spinner";
 import {
-  FirebaseInstance,
   FirestoreInstance,
 } from "../../lib/firebase/firebase";
 import { Artwork } from "../../types";
@@ -146,6 +145,7 @@ const CartPage: React.FC<Props> = ({}) => {
   }
 
   const FieldValue = require("firebase").firestore.FieldValue;
+
   function clearCart() {
     cartDocumentForThisUser.update({
       items_in_cart: FieldValue.delete(),

@@ -54,6 +54,11 @@ const CartDataProvider: React.FC = (props) => {
         rawCarts
       );
 
+      if (!formattedCarts[0]) {
+        console.error(`No cart found with user_id: ${user.id}`);
+        return;
+      }
+
       const cartForThisUser = sanitizeCart(formattedCarts[0]);
 
       /**
@@ -66,6 +71,10 @@ const CartDataProvider: React.FC = (props) => {
           const newCart = changedCart;
 
           console.log("CHANGE TO CART DETECTED", newCart);
+
+          if (!newCart) {
+            throw new Error("WTF? NO CARTS FOR THIS USER??????");
+          }
 
           setCartData(
             sanitizeCart(
