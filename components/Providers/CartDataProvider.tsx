@@ -54,12 +54,23 @@ const CartDataProvider: React.FC = (props) => {
         rawCarts
       );
 
+      let cartForThisUser: Cart;
+
       if (!formattedCarts[0]) {
         console.error(`No cart found with user_id: ${user.id}`);
-        return;
+
+        /** Create a cart for this user and keep going */
+        FirestoreInstance.collection("carts").add({
+          items_in_cart:{},
+          user_id: user.id
+        }).then((docRef) => {
+          console.log("Document (cart) created with ID", docRef.id)
+        }).catch((err) => {
+          throw new Error('Issue creating a cart for this user, please try again')
+        })
       }
 
-      const cartForThisUser = sanitizeCart(formattedCarts[0]);
+     cartForThisUser = sanitizeCart(formattedCarts[0]);
 
       /**
        * Set up the subscription

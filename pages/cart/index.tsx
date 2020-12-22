@@ -17,9 +17,7 @@ import { useArtworkDataContext } from "../../components/Providers/ArtworkDataPro
 import { useCartDataContext } from "../../components/Providers/CartDataProvider";
 import Anchor from "../../components/Reusable/Anchor";
 import Spinner from "../../components/Reusable/Spinner";
-import {
-  FirestoreInstance,
-} from "../../lib/firebase/firebase";
+import { FirestoreInstance } from "../../lib/firebase/firebase";
 import { Artwork } from "../../types";
 import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
 
@@ -27,7 +25,7 @@ interface Props {}
 
 /**
  *
- * 3. (bonus) implement the remove from cart functionality 
+ * 3. (bonus) implement the remove from cart functionality
  */
 
 const CartPage: React.FC<Props> = ({}) => {
@@ -144,11 +142,9 @@ const CartPage: React.FC<Props> = ({}) => {
     });
   }
 
-  const FieldValue = require("firebase").firestore.FieldValue;
-
   function clearCart() {
     cartDocumentForThisUser.update({
-      items_in_cart: FieldValue.delete(),
+      items_in_cart: {},
     });
   }
   /**
