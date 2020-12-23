@@ -13,7 +13,7 @@ export const APP_THEME: ThemeConfig = {
   logo: {
     width: 180,
     topBarSource: "https://i.imgur.com/p5Ksvx2.png",
-    url: "/",
+    url: APP_HOST_NAME,
 
     accessibilityLabel: "ArtCart",
   },

@@ -2,6 +2,7 @@ import { Button, Card, Layout, Page } from "@shopify/polaris";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
+import { useCartDataContext } from "../../components/Providers/CartDataProvider";
 import { useUserDataContext } from "../../components/Providers/UserDataProvider";
 import { User } from "../../types";
 
@@ -12,6 +13,7 @@ const ArtworkDetailPage: React.FC<Props> = ({}) => {
 
   const { artworks } = useArtworkDataContext();
   const { users } = useUserDataContext();
+  const { addToCart } = useCartDataContext();
 
   if (!router.query.all) {
     return null;
@@ -82,7 +84,7 @@ const ArtworkDetailPage: React.FC<Props> = ({}) => {
             </Card.Section>
             <Card.Section>
               {/* TODO: implement loading state */}
-              <Button primary loading={false}>
+              <Button primary loading={false} onClick={() => addToCart(artwork.id)}>
                 Add to Cart
               </Button>
             </Card.Section>
