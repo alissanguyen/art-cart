@@ -5,6 +5,7 @@ import CatalogueProductListing from "../../components/CatalogueProductListing";
 import styles from "../../styles/Catalogue.module.css";
 import { useArtworkDataContext } from "../../components/Providers/ArtworkDataProvider";
 import { useUserDataContext } from "../../components/Providers/UserDataProvider";
+import { Artwork, User } from "../../types";
 
 interface CatalogueInitialProps {
   initialProducts: Record<string, Artwork>;
@@ -13,7 +14,7 @@ interface CatalogueInitialProps {
 
 const Catalogue: React.FC<CatalogueInitialProps> = (props) => {
   const { artworks } = useArtworkDataContext();
-  const {users} = useUserDataContext();
+  const { users } = useUserDataContext();
 
   return (
     <Page title="ArtCart Catalogue">

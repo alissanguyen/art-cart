@@ -37,3 +37,6 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "450628220561",
   appId: "1:450628220561:web:ad7149265048a76a89f130",
 } as const;
+
+
+export const EXTANT_FIELD_VALUE = firebase.firestore.FieldValue

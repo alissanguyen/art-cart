@@ -15,13 +15,11 @@ import {
 import { signInWithGithub } from "../lib/firebase/authProviders";
 import { useAuthContext } from "./Providers/AuthProvider";
 import { useArtworkDataContext } from "./Providers/ArtworkDataProvider";
-import { useCartDataContext } from "./Providers/CartDataProvider";
 import { useRouter } from "next/router";
 
 const NavbarFrame: React.FC = (props) => {
   const authContext = useAuthContext();
   const artworkDataContext = useArtworkDataContext();
-  const cartDataContext = useCartDataContext();
   const router = useRouter();
 
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false);
@@ -67,6 +65,11 @@ const NavbarFrame: React.FC = (props) => {
                       signInWithGithub().then((user) =>
                         authContext.login(user)
                       ),
+                  },
+                  {
+                    content: "Create an Account",
+                    icon: ArrowRightMinor,
+                    onAction: () => router.push("/signup"),
                   },
                 ],
               },

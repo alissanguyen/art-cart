@@ -60,17 +60,22 @@ const CartDataProvider: React.FC = (props) => {
         console.error(`No cart found with user_id: ${user.id}`);
 
         /** Create a cart for this user and keep going */
-        FirestoreInstance.collection("carts").add({
-          items_in_cart:{},
-          user_id: user.id
-        }).then((docRef) => {
-          console.log("Document (cart) created with ID", docRef.id)
-        }).catch((err) => {
-          throw new Error('Issue creating a cart for this user, please try again')
-        })
+        FirestoreInstance.collection("carts")
+          .add({
+            items_in_cart: {},
+            user_id: user.id,
+          })
+          .then((docRef) => {
+            console.log("Document (cart) created with ID", docRef.id);
+          })
+          .catch((err) => {
+            throw new Error(
+              "Issue creating a cart for this user, please try again"
+            );
+          });
       }
 
-     cartForThisUser = sanitizeCart(formattedCarts[0]);
+      cartForThisUser = sanitizeCart(formattedCarts[0]);
 
       /**
        * Set up the subscription
@@ -132,6 +137,7 @@ export const useCartDataContext = () => {
       "You are trying to use cartDataContext without rendering its provider somewhere above this component in the component tree."
     );
   }
+
 
   return cartContextValue;
 };
