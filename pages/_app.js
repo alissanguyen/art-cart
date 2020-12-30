@@ -12,6 +12,7 @@ import ArtworkDataProvider from "../components/Providers/ArtworkDataProvider";
 import UserDataProvider from "../components/Providers/UserDataProvider";
 import CartDataProvider from "../components/Providers/CartDataProvider";
 import "../components/Reusable/spinner.css";
+import ToastProvider from "../components/Providers/ToastProvider";
 
 function MyApp({ Component, pageProps }) {
   React.useEffect(() => {
@@ -19,27 +20,29 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <AuthProvider>
-      <UserDataProvider>
-        <ArtworkDataProvider>
-          <CartDataProvider>
-            <Head>
-              <link rel="icon" href="/logo.svg" />
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1"
-              />
-              <meta name="theme-color" content="#000000" />
-            </Head>
-            <AppProvider theme={APP_THEME} i18n={enTranslations}>
-              <NavbarFrame>
-                <Component {...pageProps} />
-              </NavbarFrame>
-            </AppProvider>
-          </CartDataProvider>
-        </ArtworkDataProvider>
-      </UserDataProvider>
-    </AuthProvider>
+    <AppProvider theme={APP_THEME} i18n={enTranslations}>
+      <ToastProvider>
+        <AuthProvider>
+          <UserDataProvider>
+            <ArtworkDataProvider>
+              <CartDataProvider>
+                <Head>
+                  <link rel="icon" href="/logo.svg" />
+                  <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                  />
+                  <meta name="theme-color" content="#000000" />
+                </Head>
+                <NavbarFrame>
+                  <Component {...pageProps} />
+                </NavbarFrame>
+              </CartDataProvider>
+            </ArtworkDataProvider>
+          </UserDataProvider>
+        </AuthProvider>
+      </ToastProvider>
+    </AppProvider>
   );
 }
 

@@ -17,7 +17,7 @@ import { useArtworkDataContext } from "../../components/Providers/ArtworkDataPro
 import { useCartDataContext } from "../../components/Providers/CartDataProvider";
 import Anchor from "../../components/Reusable/Anchor";
 import Spinner from "../../components/Reusable/Spinner";
-import { FirestoreInstance } from "../../lib/firebase/firebase";
+import { EXTANT_FIELD_VALUE, FirestoreInstance } from "../../lib/firebase/firebase";
 import { Artwork } from "../../types";
 import { currencyFormatter, productIdAndNameToPath } from "../../utils/strings";
 
@@ -115,7 +115,7 @@ const CartPage: React.FC<Props> = ({}) => {
     minInlineSize: '-webkit-fill-available',
     margin: '40px'
   };
-  
+
   const emptyCartMarkup =
     cart && arrayItemsInCart.length == 0 ? (
       <Card>
@@ -137,15 +137,20 @@ const CartPage: React.FC<Props> = ({}) => {
     `${cart.id}`
   );
 
+
   function incrementItemInCart(item: Artwork & { quantity: number }) {
     cartDocumentForThisUser.update({
-      [`items_in_cart.${item.id}`]: `${item.quantity + 1}`,
+      [`items_in_cart.${item.id}`]: EXTANT_FIELD_VALUE.increment(1),
     });
   }
 
+  /**
+   * TODO: dont let users decrement it if the quantity is 0, and get rid of the item in cart if quantity goes from 1 to 0
+   */
   function decrementItemInCart(item: Artwork & { quantity: number }) {
+
     cartDocumentForThisUser.update({
-      [`items_in_cart.${item.id}`]: `${item.quantity - 1}`,
+      [`items_in_cart.${item.id}`]: EXTANT_FIELD_VALUE.increment(-1),
     });
   }
 

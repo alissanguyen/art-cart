@@ -12,6 +12,7 @@ import {
 import { Cart } from "../../types";
 import { sanitizeCart } from "../../utils/sanitization";
 import { useAuthContext } from "./AuthProvider";
+import { useToastContext } from "./ToastProvider";
 
 interface CartDataContextValue {
   cart: Cart | undefined;
@@ -25,6 +26,7 @@ const CartDataContext = React.createContext<CartDataContextValue | undefined>(
 
 const CartDataProvider: React.FC = (props) => {
   const router = useRouter();
+  const { showToast } = useToastContext();
   const [cartData, setCartData] = React.useState<Cart | undefined>(undefined);
   const [cartError, setCartError] = React.useState<string | undefined>(
     undefined
@@ -35,95 +37,8 @@ const CartDataProvider: React.FC = (props) => {
   const { userAuthentication: user } = useAuthContext();
 
   React.useEffect(() => {
-    const fetchCartData = async () => {
-      if (!user) {
-        /**
-         * If the user isn't logged in, dont do anything.
-         *
-         * General approach:
-         *
-         * 1. EVERY PERSON THAT ENTERS THE SITE AND ISN"T LOGGED IN GETS A "GUEST ID" that looks like "guest_23123abcefg"
-         * 2. We store that guest ID in local storage
-         * 3. If the guest is not logged in, we create a cart under their guest ID
-         * 4. When they log in, we find the cart with the same guest id and update the user_id field to match the logged in user and continue listening to changes to the same cart object in firestore.
-         */
-        return;
-      }
-
-      const rawCarts = await FirestoreInstance.collection("carts")
-        .where("user_id", "==", user.id)
-        .get()
-        .catch((e) => {
-          console.error(e);
-
-          setCartError("Failed to find a cart for this user.");
-        });
-
-      if (!rawCarts) {
-        return;
-      }
-
-      const formattedCarts = transformFirestoreQueryResultData<RawFirestoreCart>(
-        rawCarts
-      );
-
-      let cartForThisUser: Cart;
-
-      if (!formattedCarts[0]) {
-        console.error(`No cart found with user_id: ${user.id}`);
-
-        /** Create a cart for this user and keep going */
-        FirestoreInstance.collection("carts")
-          .add({
-            items_in_cart: {},
-            user_id: user.id,
-          })
-          .then((docRef) => {
-            console.log("Document (cart) created with ID", docRef.id);
-          })
-          .catch((err) => {
-            throw new Error(
-              "Issue creating a cart for this user, please try again"
-            );
-          });
-      }
-
-      cartForThisUser = sanitizeCart(formattedCarts[0]);
-
-      /**
-       * Set up the subscription
-       */
-
-      cartUnsubscribeFunctionRef.current = FirestoreInstance.collection("carts")
-        .doc(cartForThisUser.id)
-        .onSnapshot((changedCart) => {
-          const newCart = changedCart;
-
-          console.log("CHANGE TO CART DETECTED", newCart);
-
-          if (!newCart) {
-            throw new Error("Could not find a cart for this user");
-          }
-
-          setCartData(
-            sanitizeCart(
-              transformRawFirestoreDocument<RawFirestoreCart>(changedCart)
-            )
-          );
-
-          // Make sure we clear the error
-          setCartError(undefined);
-        });
-
-      setCartData(cartForThisUser);
-    };
-
     fetchCartData();
   }, [user]);
-
-  /**
-   *
-   */
 
   React.useEffect(() => {
     /**
@@ -134,6 +49,89 @@ const CartDataProvider: React.FC = (props) => {
       cartUnsubscribeFunctionRef.current();
     }
   }, [user]);
+
+  const fetchCartData = async () => {
+    if (!user) {
+      /**
+       * If the user isn't logged in, dont do anything.
+       *
+       * General approach:
+       *
+       * 1. EVERY PERSON THAT ENTERS THE SITE AND ISN"T LOGGED IN GETS A "GUEST ID" that looks like "guest_23123abcefg"
+       * 2. We store that guest ID in local storage
+       * 3. If the guest is not logged in, we create a cart under their guest ID
+       * 4. When they log in, we find the cart with the same guest id and update the user_id field to match the logged in user and continue listening to changes to the same cart object in firestore.
+       */
+      return;
+    }
+
+    const rawCarts = await FirestoreInstance.collection("carts")
+      .where("user_id", "==", user.id)
+      .get()
+      .catch((e) => {
+        console.error(e);
+
+        setCartError("Failed to find a cart for this user.");
+      });
+
+    if (!rawCarts) {
+      return;
+    }
+
+    const formattedCarts = transformFirestoreQueryResultData<RawFirestoreCart>(
+      rawCarts
+    );
+
+    let cartForThisUser: Cart;
+
+    if (!formattedCarts[0]) {
+      console.error(`No cart found with user_id: ${user.id}`);
+
+      /** Create a cart for this user and keep going */
+      FirestoreInstance.collection("carts")
+        .add({
+          items_in_cart: {},
+          user_id: user.id,
+        })
+        .then((docRef) => {
+          console.log("Document (cart) created with ID", docRef.id);
+        })
+        .catch((err) => {
+          throw new Error(
+            "Issue creating a cart for this user, please try again"
+          );
+        });
+    }
+
+    cartForThisUser = sanitizeCart(formattedCarts[0]);
+
+    /**
+     * Set up the subscription
+     */
+
+    cartUnsubscribeFunctionRef.current = FirestoreInstance.collection("carts")
+      .doc(cartForThisUser.id)
+      .onSnapshot((changedCart) => {
+        const newCart = changedCart;
+
+        console.log("CHANGE TO CART DETECTED", newCart);
+
+        if (!newCart) {
+          throw new Error("Could not find a cart for this user");
+        }
+
+        setCartData(
+          sanitizeCart(
+            transformRawFirestoreDocument<RawFirestoreCart>(changedCart)
+          )
+        );
+
+        // Make sure we clear the error
+        setCartError(undefined);
+      });
+
+    setCartData(cartForThisUser);
+  };
 
   async function addToCart(artworkId: string) {
     /**
@@ -163,13 +161,15 @@ const CartDataProvider: React.FC = (props) => {
        * Potential solutions:
        * 1. Just call fetchCartData from here if the cart hasn't been initialized yet
        */
-      alert("Adding to cart....");
+      fetchCartData();
+      // alert("Adding to cart....");
     } else {
-      FirestoreInstance.collection("carts")
+      await FirestoreInstance.collection("carts")
         .doc(`${cartDataReference.id}`)
         .update({
           [`items_in_cart.${artworkId}`]: EXTANT_FIELD_VALUE.increment(1),
         });
+      showToast("ADD_TO_CART_SUCCESS");
     }
   }
 
